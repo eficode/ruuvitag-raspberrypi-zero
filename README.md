@@ -12,13 +12,13 @@ This is the repository for preparing a Raspberry Pi Zero W for reading Ruuvitag 
 
 ### Writing a pre-made image
 
-On OSX run the following command to find out which disk the SD card is `diskutil list`. Check which disk is the SD card (e.g. */dev/disk2*). **NOTICE: If you write on a wrong disk, you will lose data.**
+On OSX run the following command to find out which disk the SD card is `diskutil list`. Check which disk is the SD card (e.g. */dev/disk2*). **NOTICE:** If you write on a wrong disk, you will lose data.
 
 Then unmount that disk `diskutil unmountDisk /dev/diskX`, where *diskX* is the disk you picked from the previous command.
 
 Download the ready-made Raspberry Pi Zero -image `wget https://www.dropbox.com/s/egl2t7r0143natx/ruuvitag-raspberrypi-zero-20200126.img.gz`.
 
-Finally write it one the SD card `gunzip -c ruuvitag-raspberrypi-zero-20200126.img.gz | sudo dd bs=1m of=/dev/rdisk2`.
+Finally write it one the SD card `gunzip -c ruuvitag-raspberrypi-zero-20200126.img.gz | sudo dd bs=1m of=/dev/rdiskX`. Prepend *disk* with *r*.
 
 **Now you are ready to unmount the SD card, insert it into your Raspberry Pi and Boot.**
 
@@ -52,13 +52,14 @@ Once you press enter you will see the logging from nearby ruuvitags.
 
 ### Prerequisites
 
+* [Docker](https://docs.docker.com/install/)
 * [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 
 ### Writing Raspbian on the SD card
 
 Download [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) Lite (Buster at the time of writing).
 
-On OSX run the following command to find out which disk the SD card is `diskutil list`. Check which disk is the SD card (e.g. */dev/disk2*). **NOTICE: If you write on a wrong disk, you will lose data.**
+On OSX run the following command to find out which disk the SD card is `diskutil list`. Check which disk is the SD card (e.g. */dev/disk2*). **NOTICE:** If you write on a wrong disk, you will lose data.
 
 Then unmount that disk `diskutil unmountDisk /dev/diskX`, where *diskX* is the disk you picked from the previous command.
 
@@ -66,7 +67,7 @@ Format the disk with `sudo newfs_msdos -F 32 /dev/diskX`, where *diskX* is the s
 
 Finally write the raspbian image on the disk with the command below. Notice that the disk is prepended with a letter *r*. Using the *raw disk* for writing makes writing the data much faster.
     
-    sudo dd bs=1m if=2019-09-26-raspbian-buster-lite.img of=/dev/rdisk2
+    sudo dd bs=1m if=2019-09-26-raspbian-buster-lite.img of=/dev/rdiskX
 
 ### Enabling Wifi and SSH
 
@@ -84,7 +85,7 @@ Next generate a public key from the secret key `ssh-keygen -y -f pi.pem > key.pe
 
 **Now you are ready to unmount the SD card, insert it into your Raspberry Pi and Boot.**
 
-**NOTICE: Remember to change the default password on the first login.**
+**NOTICE:** Remember to change the default password on the first login.
 
 ### Provisioning
 
@@ -102,3 +103,16 @@ Copy the `hosts.example` -file to e.g. `hosts.local` and replace `<ip address>` 
 
 Run `ansible-playbook provisioning/playbook.yml -i provisioning/hosts.local`
 
+#### Storing and shrinking the image for cloning
+
+Once the ansible provisioning is ready you can detach the SD card and attach it to your computer.
+
+Create an image of the SD card with `sudo dd bs=1m if=/dev/rdiskX of=ruuvitag-raspberrypi-zero.dmg`. Remember to replace the *X* with the disk number found from `diskutil list`, and use whatever filename.
+
+To shrink the image, and make it autoexpandable, clone the [PiShrink](https://github.com/mrako/PiShrink)-repository, build the dockerimage (by running `docker build -t pishrink .` in the repository folder) and then run the following command (replace the filenames to whatever you want):
+
+```bash
+docker run --privileged -v $(pwd):/root pishrink -z ruuvitag-raspberrypi-zero.dmg ruuvitag-raspberrypi-zero-shrunk-and-compressed.img
+```
+
+Now you can write the shrunk image to a new SD card as shown above in the quickstart: `gunzip -c ruuvitag-raspberrypi-zero-shrunk-and-compressed.img.gz | sudo dd bs=1m of=/dev/rdiskX`.
