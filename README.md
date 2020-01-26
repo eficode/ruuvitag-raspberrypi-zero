@@ -72,7 +72,7 @@ Finally write the raspbian image on the disk with the command below. Notice that
 
 To enable SSH on the Raspberry on boot time, add an empty file called *ssh* into the */boot* partition of the SD card. You will find such file in the *boot*-directory of this repository, but you can also create it with e.g. `touch /boot/ssh`.
 
-To enable Wifi, modify the *boot/wpa_supplicant.conf* with your Wifi information and add it to the */boot* partition of the SD card. **NOTICE: Raspberry Pi Zero does not support 5GHz wifi.**
+To enable Wifi, modify the *boot/wpa_supplicant.conf* with your locale and Wifi information, and add it to the */boot* partition of the SD card. **NOTICE: Raspberry Pi Zero does not support 5GHz wifi.**
 
 To disable *ipv6*, add `ipv6.disable=1` to the end of the first line of the *cmdline.txt*-file in the */boot* partition of the SD card. You will find a pre-made *cmdline.txt* for the current Buster (2019-09-26 at the time of writing) in the *boot*-directory.
 
