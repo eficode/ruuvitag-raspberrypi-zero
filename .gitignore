@@ -1,0 +1,16 @@
+# OSX
+.DS_Store
+
+# Node
+node_modules
+
+# Ansible
+.vagrant
+playbook.retry
+
+hosts.*
+!hosts.example
+
+# Keys
+keys
+*.pem
