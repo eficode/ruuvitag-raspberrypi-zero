@@ -46,7 +46,7 @@ ruuvi.on('found', (tag) => {
 
 Once you press enter you will see the logging from nearby ruuvitags.
 
-**NOTICE:** You can also copy `index.js` into the directory you created and run it with `node index.js`.
+**NOTICE:** You can also copy the content of `src/index.js` into the directory you created and run it with `node index.js`.
 
 ## Creating the image
 
