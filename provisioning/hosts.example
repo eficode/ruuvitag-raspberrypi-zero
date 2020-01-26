@@ -1,0 +1,1 @@
+<your raspberry ip address> ansible_user=pi ansible_ssh_private_key_file=keys/pi.pem

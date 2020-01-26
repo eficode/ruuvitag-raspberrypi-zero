@@ -1,0 +1,12 @@
+- name: Install libudev
+  apt:
+    pkg: ['libudev-dev']
+    state: latest
+
+- name: Add reading bluetooth rights to node
+  command: "setcap cap_net_raw+eip /usr/local/bin/node"
+
+- name: Install node-ruuvitag
+  command: "npm install node-ruuvitag --global"
+  environment:
+    NPM_CONFIG_USER: "root"

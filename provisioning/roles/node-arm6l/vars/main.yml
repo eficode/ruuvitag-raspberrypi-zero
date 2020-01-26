@@ -1,0 +1,3 @@
+node_version: "node-v10.18.1-linux-armv6l"
+node_url: "https://nodejs.org/dist/latest-v10.x/{{ node_version }}.tar.xz"
+target_root: "/home/{{ ansible_user }}"

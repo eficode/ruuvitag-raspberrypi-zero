@@ -1,0 +1,28 @@
+- name: Download prebuilt node
+  get_url:
+    url: "{{ node_url }}"
+    dest: "{{ target_root }}/{{ node_version }}.tar.xz"
+
+- name: Create prebuilt node directory
+  file:
+    path: "{{ target_root }}/{{ node_version }}"
+    state: directory
+
+- name: Extract prebuilt node
+  unarchive:
+    remote_src: yes
+    src: "{{ target_root }}/{{ node_version }}.tar.xz"
+    dest: "{{ target_root }}"
+
+- name: Copy node to /usr/local
+  command: "cp -R {{ target_root }}/{{ node_version }}/. /usr/local"
+
+- name: Remove downloaded archive
+  file:
+    path: "{{ target_root }}/{{ node_version }}.tar.xz"
+    state: absent
+
+- name: Remove extracted files
+  file:
+    path: "{{ target_root }}/{{ node_version }}"
+    state: absent
